@@ -1,0 +1,41 @@
+::-webkit-scrollbar {
+    width : 5px;
+    height: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background: #777;
+}
+
+
+// 分页
+.am-pagination {
+    .am-dropdown {
+        .am-button {
+            background: rgba(255, 255, 255, 0.1)!important;
+            border-radius: 3px;
+            border: none;
+            color: #fff;
+        }
+    }
+    &__number, &__left, &__right {
+        background: rgba(255, 255, 255, 0.1)!important;
+        border: none;
+        border-radius: 3px;
+        // 选中态
+        &.active {
+            background: var(--primary);
+            cursor: default;
+        }
+        &:not(.active) {
+            &:hover,&.is-down {
+                background: var(--bg-2);
+                color: var(--fcolor-1);
+                border-radius: 3px;
+            }
+        }
+    }
+}
+
+.am-button {
+    border-radius: 4px;
+}

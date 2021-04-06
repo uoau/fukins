@@ -1,0 +1,16 @@
+
+### 立即执行
+POST http://localhost:9400/api/task/start
+content-type: application/json;charset=UTF-8
+
+{
+    "taskName": "test"
+}
+
+### 获取所有任务
+GET http://localhost:9400/api/tasks
+content-type: application/json;charset=UTF-8
+
+### 获取任务详情
+GET http://localhost:9400/api/task/config/test
+content-type: application/json;charset=UTF-8

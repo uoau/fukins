@@ -1,0 +1,20 @@
+{
+    "taskName": "项目名称",
+    "git": "xxxxxxxxxxxx",
+
+    "gitAccount": "",
+    "gitPassword": "",
+    "gitHooks": "",
+    "gitSchedule": "",
+    
+    "pipeline": [
+        {
+            "name": "测试",
+            "sh": "node -v\n node -v"
+        },
+        {
+            "name": "打包",
+            "sh": "cd /\nls\nnpm -v"
+        }
+    ]
+}
