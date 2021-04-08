@@ -1,12 +1,14 @@
 <template>
     <div class="app">
-        <!-- 左布局 -->
-        <div class="app-left">
-            <Nav />
-        </div>
-        <!-- 右布局 -->
-        <div class="app-right">
-            <RouterView />
+        <div class="app-inner">
+            <!-- 左布局 -->
+            <div class="app-left">
+                <Nav />
+            </div>
+            <!-- 右布局 -->
+            <div class="app-right">
+                <RouterView />
+            </div>
         </div>
     </div>
 </template>
@@ -24,13 +26,16 @@ export default {
 html, body {
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 .app {
-    width: 100%;
-    height: 100%;
-    display: flex;
     background: #fff;
-    padding-left: calc(100vw - 100% + 340px);
+    height: 100%;
+    overflow: auto;
+    .app-inner {
+        width: 100%;
+        padding-left: calc(100vw - 100% + 340px);
+    }
     .app-left {
         width: 340px;
         height: 100%;

@@ -5,41 +5,44 @@
 
             <div class="m-control-bar">
                 <div class="left">
-                    <AmButton type="primary" @click="toTaskConfig">新增任务</AmButton>
+                    <AmButton type="primary" @click="toTaskConfig('')">新增任务</AmButton>
                 </div>
                 <div class="right">
                     <AmInput />
                 </div>
             </div>
-            <div class="m-list">
+            <div class="m-list" v-loading="loading">
                 <div 
                     class="item" 
                     v-for="(item,index) in dealedList"
                     :key="index"
                 >
                     <div class="left">
-                        <h4>{{ item.name }}<i>WebHook任务</i></h4>
+                        <h4>
+                            <p>[{{ item.id }}] {{ item.name }}</p>
+                            <AmTag text="WebHook"/>
+                        </h4>
                         <ul>
                             <li>
                                 <span>状态</span>
                                 <p>
-                                    <i></i>
+                                    <i class="status-ball"></i>
                                     <span>监听中</span>
                                 </p>
                             </li>
                             <li>
-                                <span>最近执行</span>
+                                <span>最近执行 <a>更多</a></span>
                                 <p>
-                                    <span>2020-03-16 12:00:00</span>
+                                    <span></span>
                                     <span>执行失败</span>
-                                    <AmButton type="text">查看</AmButton>
+                                    <a>查看</a>
                                 </p>
                             </li>
                         </ul>
                     </div>
                     <div class="right">
-                        <AmButton type="primary" @click="run">立即执行</AmButton>
-                        <AmButton @click="toTaskConfig">修改配置</AmButton>
+                        <AmButton type="primary" @click="run(item)">立即执行</AmButton>
+                        <AmButton @click="toTaskConfig(item.id)">修改配置</AmButton>
                     </div>
                 </div>
             </div>
@@ -49,7 +52,7 @@
 
 <script>
 import PageHeader from '../../components/page-header';
-import { get } from '@/utils/fetch';
+import { get,post } from '@/utils/fetch';
 
 export default {
     components: {
@@ -57,11 +60,8 @@ export default {
     },
     data(){
         return {
-            list: [
-                {name: '小红', age: 12},
-                {name: '小蓝', age: 13},
-                {name: '小蓝', age: 13},
-            ]
+            loading: false,
+            list: []
         }
     },
     computed: {
@@ -71,22 +71,35 @@ export default {
     },
     created(){
         this.getTaskList();
+
+        window.ws.add(this.handleWebSocket);
+    },
+    beforeDestroy() {
+        window.ws.remove(this.handleWebSocket);
     },
     methods: {
+        handleWebSocket(data){
+            console.log(data);
+        },
         async getTaskList(){
+            this.loading = true;
             const res = await get('http://localhost:9400/api/tasks');
-            this.list = res;
+            this.list = res.data.list;
+            this.loading = false;
         },
-        run(){
-            
+        async run(item){
+            const res = await post('http://localhost:9400/api/task/start',{
+                taskId: item.id,
+            });
+            console.log(res);
         },
-        toTaskConfig(name){
+        toTaskConfig(id){
             const params = {
                 path: '/task-config',
             };
-            if(name) {
+            if(id) {
                 params.query = {
-                    taskname: name,
+                    taskid: id,
                 }
             }
             this.$router.push(params);
@@ -119,6 +132,7 @@ export default {
         }
     }
     .m-list {
+        position: relative;
         .item {
             padding: 16px 0;
             display: flex;
@@ -133,6 +147,7 @@ export default {
                     display: flex;
                     align-items: center;
                     margin-bottom: 4px;
+
                     i {
                         height: 18px;
                         border-radius: 3px;
@@ -164,15 +179,21 @@ export default {
                             span {
                                 margin-right: 4px;
                             }
-                            i {
-                                display: inline-flex;
-                                width: 10px;
-                                height: 10px;
-                                border-radius: 50%;
-                                background: red;
-                                margin-right: 4px;
-                            }
                         }
+                    }
+                }
+                .status-ball {
+                    display: inline-flex;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: red;
+                    margin-right: 4px;
+                    &.running {
+                        background: orange;
+                    }
+                    &.waitting {
+                        background: green;
                     }
                 }
             }

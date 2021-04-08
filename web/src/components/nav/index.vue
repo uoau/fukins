@@ -11,13 +11,16 @@
                 :key="index"
                 class="item"
                 :class="{
-                    'is-active': index === 0
+                    'is-active': $route.path === item.to
                 }"
+                @click="clickNavItem(item)"
             >
-                <AmIcon name="close" />
+                <AmIcon :name="item.icon" size="18px"/>
                 <span>{{ item.name }}</span>
             </div>
         </div>
+
+        <!--  -->
     </div>    
 </template>
 
@@ -27,11 +30,22 @@ export default {
         return {
             nav: [{
                 name: '任务列表',
+                icon: 'commode2',
+                to: '/task-list'
             }, {
-                name: '全局配置'
+                name: '全局配置',
+                icon: 'component',
+                to: '/global-config'
             }]
         }
     },
+    methods: {
+        clickNavItem(item){
+            this.$router.push({
+                path: item.to,
+            })
+        }
+    }
 }
 </script>
 
@@ -54,23 +68,28 @@ export default {
             align-items: center;
             padding: 0 8px;
             margin-bottom: 8px;
+            border-radius: 4px;
+            transform: background .2s;
+            cursor: pointer;
             .am-icon {
-                color: #fff;
+                color: #878787;
                 margin-right: 8px;
             }
             >span {
-                color: #fff;
+                color: #878787;
                 font-size: 14px;
             }
             &.is-active {
                 background: #444;
-                border-radius: 4px;
                 .am-icon {
-        
+                    color: #fff;
                 }
                 >span {
-
+                    color: #fff;
                 }
+            }
+            &:hover {
+                background: #444;
             }
         }
     }

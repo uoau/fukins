@@ -1,20 +1,19 @@
 {
-    "taskName": "项目名称",
-    "git": "xxxxxxxxxxxx",
-
-    "gitAccount": "",
-    "gitPassword": "",
-    "gitHooks": "",
-    "gitSchedule": "",
-    
+    "name": "测试任务",
+    "usage": "12",
+    "triggerType": "3",
+    "webhookMethod": "GET",
+    "webhookParams": "",
+    "scheduleSet": "",
+    "scheduleCode": "",
     "pipeline": [
         {
-            "name": "测试",
-            "sh": "node -v\n node -v"
+            "name": "步骤一",
+            "sh": "clear\nsleep 3"
         },
         {
-            "name": "打包",
-            "sh": "cd /\nls\nnpm -v"
+            "name": "步骤二",
+            "sh": "npm -v\nls"
         }
     ]
 }

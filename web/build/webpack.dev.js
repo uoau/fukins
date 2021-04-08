@@ -11,7 +11,7 @@ const devConfig = {
     },
     devServer: {
         contentBase: path.join(__dirname, '../dist'),
-        port: 9401,
+        port: 9402,
         open: true,
     },
     plugins: [
