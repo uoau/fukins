@@ -9,11 +9,19 @@
     "pipeline": [
         {
             "name": "步骤一",
-            "sh": "clear\nsleep 3"
+            "sh": "sleep 3\nnode -v"
         },
         {
             "name": "步骤二",
-            "sh": "npm -v\nls"
+            "sh": "node -v\ncd / & ls & pwd\nnode -v"
+        },
+        {
+            "name": "步骤三",
+            "sh": "node -v\ngit -v\nnode-v"
+        },
+        {
+            "name": "步骤四",
+            "sh": "node -v"
         }
     ]
 }

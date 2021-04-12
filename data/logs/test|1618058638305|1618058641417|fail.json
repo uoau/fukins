@@ -1,0 +1,16 @@
+{
+    "list": [
+        {
+            "step": "步骤一",
+            "content": "v10.20.0\n"
+        },
+        {
+            "step": "步骤二",
+            "content": "v10.20.0\n/Users/luxun/self/git/fukins\nREADME.ME\napp\ndata\nnode_modules\npackage.json\ntest.sh\nweb\nv10.20.0\n"
+        },
+        {
+            "step": "步骤三",
+            "content": "v10.20.0\nunknown option: -v\nusage: git [--version] [--help] [-C <path>] [-c <name>=<value>]\n           [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]\n           [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]\n           [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]\n           <command> [<args>]\nsh: line 2: node-v: command not found\n"
+        }
+    ]
+}

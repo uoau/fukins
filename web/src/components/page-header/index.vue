@@ -19,12 +19,13 @@ export default {
 
 <style lang="less">
 .m-page-header {
-    padding: 24px 0 12px 0;
+    padding: 16px;
     margin-bottom: 24px;
     border-bottom: 1px solid var(--border);
+    background: #fff;
     &__left {
         >h1 {
-            font-size: 24px;
+            font-size: 16px;
         }
     }
 }

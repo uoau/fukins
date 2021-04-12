@@ -1,7 +1,0 @@
-{
-    "date": "2021-03-16 14:22:22",
-    "list": [{
-        "name": "测试",
-        "log": "192:fukins luxun$\n192:fukins luxun$ git log remotes/origin\nfatal: ambiguous argument 'remotes/origin': unknown revision or path not in the working tree.\nUse '--' to separate paths from revisions, like this:\n'git <command> [<revision>...] -- [<file>...]'\n192:fukins luxun$ git status -s"
-    }]
-}

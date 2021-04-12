@@ -1,6 +1,8 @@
 import taskList from './pages/task-list';
 import taskConfig from './pages/task-config';
 import taskLog from './pages/task-log';
+import taskLogs from './pages/task-logs';
+import login from './pages/login';
 
 export default [
     {
@@ -20,5 +22,13 @@ export default [
     {
         path: '/task-log',
         component: taskLog,
+    },
+    {
+        path: '/task-logs',
+        component: taskLogs,
+    },
+    {
+        path: '/login',
+        component: login,
     },
 ]

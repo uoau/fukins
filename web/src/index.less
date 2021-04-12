@@ -1,3 +1,8 @@
+:root {
+    // 主题色1 深青
+    --primary: #2f50eb;
+}
+
 ::-webkit-scrollbar {
     width : 5px;
     height: 5px;
@@ -37,7 +42,7 @@
 }
 
 .am-button {
-    border-radius: 4px;
+    border-radius: 2px;
 }
 .am-input {
     border-radius: 3px;
@@ -45,4 +50,19 @@
 .am-textarea {
     border-radius: 3px;
     overflow: hidden;
+}
+
+.am-table {
+    border: 1px solid var(--border);
+    &__hd {
+        background: #f7f7f7;
+        th {
+            padding: 8px 16px!important;
+            font-size: 12px!important;
+            color: #666!important;
+        }
+    }
+    &__bd {
+        background: #fff;
+    }
 }

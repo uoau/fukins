@@ -29,15 +29,15 @@ html, body {
     overflow: hidden;
 }
 .app {
-    background: #fff;
+    background: #f3f4f7;
     height: 100%;
     overflow: auto;
     .app-inner {
         width: 100%;
-        padding-left: calc(100vw - 100% + 340px);
+        padding-left: calc(100vw - 100% + 320px);
     }
     .app-left {
-        width: 340px;
+        width: 320px;
         height: 100%;
         position: fixed;
         left: 0;

@@ -9,10 +9,7 @@ export function fetch(query = {}) {
         delete params.data;
     }
     // headers
-    if (params.method !== 'get'){
-        params.headers = {};
-        params.headers.Authorization = localStorage.getItem('token');
-    }
+    params.headers.Authorization = localStorage.getItem('token');
     // 合理状态
     params.validateStatus = (status) => (status >= 200 && status < 400);
 

@@ -8,13 +8,13 @@ const { runPromiseByQueue } = require('../../../utils/index');
  */
 module.exports.startTask = async (ctx) => {
     const { taskId } = ctx.request.body;
-    let taskConfig = await fs.readFileSync(path.join(__dirname, `../../data/tasks/${taskId}.json`));
+    let taskConfig = await fs.readFileSync(path.join(__dirname, `../../../../data/tasks/${taskId}.json`));
     taskConfig = JSON.parse(taskConfig);
     const task = {
         taskId,
         pipeline: taskConfig.pipeline,
     };
-    const failMsg = ctx.taskDealer.addTask(task);
+    const failMsg = global.FUKINS.taskDealer.addTask(task);
     if(failMsg) {
         ctx.fail(failMsg);
         return;
@@ -46,13 +46,13 @@ module.exports.editTask = async (ctx) => {
     console.log(name,id,usage);
 
     // 校验
-    if(mode === 'add' && await fs.existsSync(path.join(__dirname, `../../data/tasks/${id}.json`))){
+    if(mode === 'add' && await fs.existsSync(path.join(__dirname, `../../../../data/tasks/${id}.json`))){
         ctx.fail('id已存在');
     }
 
     // 文件写入信息
     await fs.writeFileSync(
-        path.join(__dirname, `../../data/tasks/${id}.json`), 
+        path.join(__dirname, `../../../../data/tasks/${id}.json`), 
         JSON.stringify({
             name,
             usage,
@@ -73,17 +73,17 @@ module.exports.editTask = async (ctx) => {
  */
  module.exports.delTask = async (ctx) => {
     const { taskId } = ctx.request.body;
-    const taskLogFileNames = await fs.readdirSync(path.join(__dirname, `../../data/logs`));
+    const taskLogFileNames = await fs.readdirSync(path.join(__dirname, `../../../../data/logs`));
     // 删除日志
     const thisTaskLogFileNames = taskLogFileNames
         .filter((taskLogFileName) => taskLogFileName.split('|')[0] === taskId);
     await runPromiseByQueue(thisTaskLogFileNames.map((thisTaskLogFileName) => {
         return async ()=>{
-            await fs.unlinkSync(path.join(__dirname, '../../data/logs', thisTaskLogFileName));    
+            await fs.unlinkSync(path.join(__dirname, '../../../../data/logs', thisTaskLogFileName));    
         } 
     }));
     // 删除配置
-    await fs.unlinkSync(path.join(__dirname, '../../data/tasks', `${taskId}.json`));
+    await fs.unlinkSync(path.join(__dirname, '../../../../data/tasks', `${taskId}.json`));
     ctx.success();
 };
 
@@ -92,13 +92,13 @@ module.exports.editTask = async (ctx) => {
  */
  module.exports.getTasks = async (ctx) => {
     // 请求 data/tasks 文件下所有任务
-    const taskFileNames = await fs.readdirSync(path.join(__dirname, `../../data/tasks`));
-    const taskLogFileNames = await fs.readdirSync(path.join(__dirname, `../../data/logs`));
+    const taskFileNames = await fs.readdirSync(path.join(__dirname, `../../../../data/tasks`));
+    const taskLogFileNames = await fs.readdirSync(path.join(__dirname, `../../../../data/logs`));
     const list = [];
     await runPromiseByQueue(taskFileNames.map((taskFileName)=>{
         return async ()=> {
             /*
-             * id 任务id
+             * taskId 任务id
              * name 任务名
              * triggerType 触发类型
              * taskLogList: [{ 日志列表
@@ -109,7 +109,7 @@ module.exports.editTask = async (ctx) => {
              */
             const obj = {};
             const taskId = taskFileName.match(/(.*)\.json/)[1];
-            let taskConfig = await fs.readFileSync(path.join(__dirname, `../../data/tasks/${taskFileName}`));
+            let taskConfig = await fs.readFileSync(path.join(__dirname, `../../../../data/tasks/${taskFileName}`));
             taskConfig = JSON.parse(taskConfig);
             obj.id = taskId; // 任务id
             obj.name = taskConfig.name; // 任务名
@@ -117,17 +117,18 @@ module.exports.editTask = async (ctx) => {
             const taskLogList = taskLogFileNames
                 .filter((taskLogFileName) => taskLogFileName.split('|')[0] === taskId)
                 .map((taskLogFileName) =>{
-                    const taskLogMatch = taskLogFileName.split('|');
+                    const taskLogMatch = taskLogFileName.match(/(.*)\.json/)[1].split('|');
                     const start = taskLogMatch[1];
                     const end = taskLogMatch[2];
-                    const state = end ? 'success' : 'running';
+                    const state = !end ? 'running' : taskLogMatch[3]; // pending success fail
                     return {
+                        taskLogFileName, 
                         start,
                         end,
                         state,
                     };
                 }).sort((a,b)=>{
-                    return new Date(a).getTime() - new Date(b).getTime();
+                    return a.start - b.start;
                 });
             obj.taskLogList = taskLogList;
             obj.triggerType = taskConfig.triggerType; // trigger类型
@@ -144,7 +145,7 @@ module.exports.editTask = async (ctx) => {
  */
 module.exports.getTaskConfig = async (ctx) => {
     const { taskName } = ctx.request.params;
-    let taskConfig = await fs.readFileSync(path.join(__dirname, `../../data/tasks/${taskName}.json`));
+    let taskConfig = await fs.readFileSync(path.join(__dirname, `../../../../data/tasks/${taskName}.json`));
 
     ctx.success({
         config: JSON.parse(taskConfig)
