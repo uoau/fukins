@@ -117,8 +117,4 @@ class TaskDealer {
 }
 const taskDealer = new TaskDealer();
 
-async function execSync(){
-
-}
-
 module.exports = taskDealer;

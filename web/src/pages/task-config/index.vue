@@ -5,77 +5,79 @@
             <!-- 内容 -->
             <div class="m-content">
                 <AmForm position="top">
-                    <h5>基础信息</h5>
-                    <div class="row">
-                        <AmFormItem label="任务名称" style="flex: 1;margin-right: 16px;">
-                            <AmInput v-model="config.name" />
-                        </AmFormItem>
-                        <AmFormItem label="任务ID" style="flex: 1;">
-                            <AmInput v-model="config.id" />
-                        </AmFormItem>
-                    </div>
-                    <AmFormItem label="使用说明">
-                        <AmTextarea autosize v-model="config.usage"/>
-                    </AmFormItem>
-
-                    <h5>触发器</h5>
-                    <AmFormItem label="触发方式">
-                        <AmRadio v-model="config.triggerType" label="1">Web Hook</AmRadio>
-                        <AmRadio v-model="config.triggerType" label="2">轮询</AmRadio>
-                        <AmRadio v-model="config.triggerType" label="3">手动触发</AmRadio>
-                    </AmFormItem>
-                    <!-- webhook 方式 -->
-                    <template v-if="config.triggerType === '1'">
+                    <FoldBar title="基础信息">
                         <div class="row">
-                            <AmFormItem label="请求方式" style="width: 160px;margin-right: 8px;">
-                                <AmSelect v-model="config.webhookMethod">
-                                    <AmOption
-                                        v-for="(item,index) in webhookMethodOptions"
-                                        :key="index"
-                                        :item="item"
-                                    >{{ item.label }}</AmOption>
-                                </AmSelect>
+                            <AmFormItem label="任务名称" style="flex: 1;margin-right: 16px;">
+                                <AmInput v-model="config.name" />
                             </AmFormItem>
-                            <AmFormItem label="请求地址" style="flex: 1;">
-                                <AmInput v-model="webhookUrl"/>
+                            <AmFormItem label="任务ID" style="flex: 1;">
+                                <AmInput v-model="config.id" />
                             </AmFormItem>
                         </div>
-                        <AmFormItem label="参数(JSON格式)">
-                            <AmTextarea autosize v-model="config.triggerCode"/>
+                        <AmFormItem label="使用说明">
+                            <AmTextarea autosize v-model="config.usage"/>
                         </AmFormItem>
-                    </template>
-                    <!-- 轮询方式 -->
-                    <template v-if="config.triggerType === '2'">
-                        <AmFormItem label="计时器">
-                            <div class="column">
-                                <AmTextarea v-model="config.scheduleSet"/>
-                            </div>
-                        </AmFormItem>
-                        <AmFormItem label="轮询代码">
-                            <AmTextarea autosize v-model="config.scheduleCode"/>
-                        </AmFormItem>
-                    </template>
+                    </FoldBar>
 
-                    <h5>执行代码</h5>
-
-                    <div 
-                        class="m-pipeline-box" 
-                        v-for="(item,index) in config.pipeline"
-                        :key="item"
-                    >
-                        <div class="hd">
-                            <div class="left">
-                                <AmInput v-model="item.name"/>
+                    <FoldBar title="触发器">
+                        <AmFormItem label="触发方式">
+                            <AmRadio v-model="config.triggerType" label="1">Web Hook</AmRadio>
+                            <AmRadio v-model="config.triggerType" label="2">轮询</AmRadio>
+                            <AmRadio v-model="config.triggerType" label="3">手动触发</AmRadio>
+                        </AmFormItem>
+                        <!-- webhook 方式 -->
+                        <template v-if="config.triggerType === '1'">
+                            <div class="row">
+                                <AmFormItem label="请求方式" style="width: 160px;margin-right: 8px;">
+                                    <AmSelect v-model="config.webhookMethod">
+                                        <AmOption
+                                            v-for="(item,index) in webhookMethodOptions"
+                                            :key="index"
+                                            :item="item"
+                                        >{{ item.label }}</AmOption>
+                                    </AmSelect>
+                                </AmFormItem>
+                                <AmFormItem label="请求地址" style="flex: 1;">
+                                    <AmInput v-model="webhookUrl"/>
+                                </AmFormItem>
                             </div>
-                            <div class="right">
-                                <AmIconButton icon-size="16px" icon-name="ic_add_box" size="small" @click="addPipeline(index)"/>
-                                <AmIconButton icon-size="16px" icon-name="delete-bin-6-fill" size="small" @click="delPipeline(index)"/>
+                            <AmFormItem label="参数(JSON格式)">
+                                <AmTextarea autosize v-model="config.triggerCode"/>
+                            </AmFormItem>
+                        </template>
+                        <!-- 轮询方式 -->
+                        <template v-if="config.triggerType === '2'">
+                            <AmFormItem label="计时器">
+                                <div class="column">
+                                    <AmTextarea v-model="config.scheduleSet"/>
+                                </div>
+                            </AmFormItem>
+                            <AmFormItem label="轮询代码">
+                                <AmTextarea autosize v-model="config.scheduleCode"/>
+                            </AmFormItem>
+                        </template>
+                    </FoldBar>
+
+                    <FoldBar title="执行脚本">
+                        <div 
+                            class="m-pipeline-box" 
+                            v-for="(item,index) in config.pipeline"
+                            :key="index"
+                        >
+                            <div class="hd">
+                                <div class="left">
+                                    <AmInput v-model="item.name"/>
+                                </div>
+                                <div class="right">
+                                    <AmIconButton icon-size="16px" icon-name="ic_add_box" size="small" @click="addPipeline(index)"/>
+                                    <AmIconButton icon-size="16px" icon-name="delete-bin-6-fill" size="small" @click="delPipeline(index)"/>
+                                </div>
+                            </div>
+                            <div class="bd">
+                                <AmTextarea autosize v-model="item.sh"/>
                             </div>
                         </div>
-                        <div class="bd">
-                            <AmTextarea autosize v-model="item.sh"/>
-                        </div>
-                    </div>
+                    </FoldBar>
                 </AmForm>
             </div>
 
@@ -89,10 +91,12 @@
 <script>
 import PageHeader from '../../components/page-header';
 import { get, post } from '@/utils/fetch';
+import FoldBar from '../../components/fold-bar';
 
 export default {
     components: {
         PageHeader,
+        FoldBar,
     },
     data(){
         return {
@@ -212,32 +216,9 @@ export default {
         flex: 1;
         background: #fff;
         border: 1px solid var(--border);
-        padding: 16px;
         .am-form {
             width: 100%;
-            > h5 {
-                margin-bottom: 8px;
-                font-size: 14px;
-                margin-top: 40px;
-                border-radius: 3px;
-                position: relative;
-                &:before {
-                    content: '';
-                    display: inline-flex;
-                    width: 4px;
-                    height: 16px;
-                    background: var(--primary);
-                    position: absolute;
-                    top: 0;
-                    bottom: 0;
-                    left: -16px;
-                    margin: auto;
-                }
-                &:first-child {
-                    margin-top: 0;
-                }
-            }
-            &-item.is-top {
+            &-item {
                 margin-bottom: 0px;
                 display: flex;
                 flex-direction: column;

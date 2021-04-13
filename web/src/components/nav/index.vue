@@ -3,7 +3,7 @@
         <!-- Logo -->
         <Logo />
         <!-- 栏目 -->
-        <div class="m-list">
+        <div class="m-nav__list">
             <div 
                 v-for="(group,index1) in nav"
                 :key="index1"
@@ -16,7 +16,7 @@
                         :key="index2"
                         class="item"
                         :class="{
-                            'is-active': $route.path === item.to
+                            'is-active': checkActive(item)
                         }"
                         @click="clickNavItem(item)"
                     >
@@ -27,27 +27,30 @@
             </div>
         </div>
 
-        <!-- 日志卡片 -->
-        <div class="m-log-card">
-            <div class="hd">
-                <div class="left">任务日志</div>
-                <div class="right">
-                    <AmIcon name="setting" />
+        <div class="m-nav__bottom">
+            <!-- 日志卡片 -->
+            <div class="m-nav__log-card">
+                <div class="hd">
+                    <div class="left">任务日志 12.2M / 100M</div>
+                    <div class="right">
+                        <!-- <AmIcon name="setting" /> -->
+                        清理
+                    </div>
+                </div>
+                <div class="bd">
+                    <div class="progress"><i></i></div>
+                    <!-- <div class="tip">12.2M / 100M</div> -->
                 </div>
             </div>
-            <div class="bd">
-                <div class="progress"><i></i></div>
-                <div class="tip">12.2M / 100M</div>
-            </div>
-        </div>
-        <!-- 用户信息 -->
-        <div class="m-user-card">
-            <div class="left">
-                <div>A</div>
-            </div>
-            <div class="right">
-                <span>Admin</span>
-                <a>退出</a>
+            <!-- 用户信息 -->
+            <div class="m-nav__user-card">
+                <div class="left">
+                    <div>A</div>
+                    <span>Admin</span>
+                </div>
+                <div class="right">
+                    <AmIconButton icon-name="close"></AmIconButton>
+                </div>
             </div>
         </div>
     </div>    
@@ -66,7 +69,13 @@ export default {
                 list:[{
                     name: '任务列表',
                     icon: 'commode2',
-                    to: '/task-list'
+                    to: '/task-list',
+                    child: [
+                        '/task-list',
+                        '/task-config',
+                        '/task-logs',
+                        '/task-log'
+                    ]
                 }]
             },
             {
@@ -74,11 +83,17 @@ export default {
                 list:[{
                     name: '全局配置',
                     icon: 'component',
-                    to: '/global-config'
+                    to: '/global-config',
+                    child: [
+                        '/global-config',
+                    ]
                 },{
                     name: '新手教程',
                     icon: 'commode2',
-                    to: '/task-list2'
+                    to: '/readme',
+                    child: [
+                        '/readme',
+                    ]
                 }]
             }]
         }
@@ -88,6 +103,15 @@ export default {
             this.$router.push({
                 path: item.to,
             })
+        },
+        checkActive(item) {
+            const index = item.child.findIndex((i)=> {
+                return this.$route.path.indexOf(i) > -1;
+            })
+            if(index > -1) {
+                return true;
+            }
+            return false;
         }
     }
 }
@@ -107,7 +131,7 @@ export default {
         font-size: 24px;
         font-weight: bold;
     }
-    .m-list {
+    &__list {
         flex: 1;
         .group {
             margin-bottom: 24px;
@@ -120,17 +144,17 @@ export default {
             }
             .group-box {
                 .item {
-                    height: 32px;
+                    height: 34px;
                     display: flex;
                     align-items: center;
                     margin-bottom: 8px;
-                    transform: background .2s;
+                    transition: background .2s;
                     padding: 0 40px;
                     cursor: pointer;
                     .am-icon {
                         color: #c1c6c8;
                         margin-right: 8px;
-                        background: #40464c;
+                        background: #33414e;
                         border-radius: 50%;
                         padding: 6px;
                         width: 28px;
@@ -142,8 +166,6 @@ export default {
                     }
                     &.is-active {
                         background: #5471f9;
-                        // border-top: 1px solid var(--border);
-                        // border-bottom: 1px solid var(--border);
                         .am-icon {
                             color: #fff;
                             background: none;
@@ -152,16 +174,21 @@ export default {
                             color: #fff;
                         }
                     }
-                    &:hover {
-                        background: #444;
+                    &:not(.is-active):hover {
+                        background: #33414e;
                     }
                 }
             }
         }
     }
-    .m-log-card {
-        padding: 24px 40px;
+
+    &__bottom {
         background: #141a1f;
+        padding: 24px 0;
+    }
+    &__log-card {
+        padding: 0 40px;
+        margin-bottom: 24px;
         .hd {
             display: flex;
             justify-content: space-between;
@@ -171,6 +198,9 @@ export default {
                 font-weight: bold;
                 color: #999;
             }
+            .right {
+                
+            }
         }
         .bd {
             display: flex;
@@ -178,7 +208,7 @@ export default {
             .progress {
                 width: 100%;
                 height: 4px;
-                background: #ddd;
+                background: #445565;
                 margin-bottom: 4px;
                 display: flex;
                 border-radius: 4px;
@@ -186,7 +216,7 @@ export default {
                 i {
                     width: 60%;
                     height: 100%;
-                    background: #24af60;
+                    background: #5dca73;
                     display: inline-flex;
                     border-radius: 4px;
                 }
@@ -197,14 +227,16 @@ export default {
             }
         }
     }
-    .m-user-card {
+    &__user-card {
         display: flex;
-        padding: 16px 40px;
+        padding: 0 40px;
         width: 100%;
         align-items: center;
-        background: #141a1f;
+        justify-content: space-between;
         .left {
             margin-right: 8px;
+            display: flex;
+            align-items: center;
             div {
                 width: 30px;
                 height: 30px;
@@ -214,20 +246,22 @@ export default {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                margin-right: 8px;
+            }
+            span {
+                font-size: 14px;
+                font-weight: 600;
+                color: #fff;
             }
         }
         .right {
             display: flex;
             font-size: 14px;
             align-items: baseline;
-            span {
-                font-weight: 600;
-                color: #fff;
-            }
-            a {
-                color: #fff;
-                font-size: 13px;
-                margin-left: 8px;
+            .am-icon-button {
+                border: none;
+                color: #999;
+                background: #000;
             }
         }
     }

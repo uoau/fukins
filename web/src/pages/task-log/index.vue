@@ -10,6 +10,16 @@
                 </div>
             </div>
 
+            <!-- 
+                任务名
+                执行结果
+                开始时间
+                结束时间
+                提交信息
+                
+                流程进度
+             -->
+
             <div class="m-log">
                 <div class="item">
                     <div class="hd"><StateBall state="success">第一阶段：测试</StateBall></div>

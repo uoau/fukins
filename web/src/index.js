@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import routes from './routes';
 import '../../../all-mine/lib/index.css';
 import '@/index.less';
-import allMine from '../../../all-mine/lib/index';
+import allMine from '../../../all-mine/packages/index';
 import App from './app.vue';
 import createWebSocket from './utils/websocket';
 
